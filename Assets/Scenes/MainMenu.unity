@@ -2594,7 +2594,7 @@ MonoBehaviour:
   useElo: 0
   myElo: 0
   eloRequired: 0
-  networkManager: {fileID: 0}
+  networkManager: {fileID: 186558, guid: 79adc0da5b6caf74990d862696696ecd, type: 2}
   ToggledButtons: []
   useMainThreadManagerForRPCs: 1
   useInlineChat: 0
@@ -4517,6 +4517,10 @@ Prefab:
         type: 2}
       propertyPath: m_Color.a
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1327397111958810, guid: 351bedd6ebc8b0246a4608be698e8612, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 351bedd6ebc8b0246a4608be698e8612, type: 2}

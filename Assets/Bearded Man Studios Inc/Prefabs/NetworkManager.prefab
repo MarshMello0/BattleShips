@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 11439882}
   m_Layer: 0
   m_Name: NetworkManager
-  m_TagString: Untagged
+  m_TagString: NetworkManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -40,14 +40,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe5b082a785e7641bf1a62b930a3f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChatManagerNetworkObject:
-  - {fileID: 1000012032569418, guid: b454b1be0b2c3fa4fb48430867af7566, type: 2}
-  CubeForgeGameNetworkObject: []
-  ExampleProximityPlayerNetworkObject:
-  - {fileID: 0}
-  NetworkCameraNetworkObject:
-  - {fileID: 0}
-  TestNetworkObject: []
+  PlayerNetworkObject:
+  - {fileID: 1643137526207348, guid: 351bedd6ebc8b0246a4608be698e8612, type: 2}
   automaticScenes: 1
 --- !u!1001 &100100000
 Prefab:
