@@ -27,6 +27,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 						availableCallback = true;
 						obj = new PlayerNetworkObject(networker, id, frame);
 						break;
+					case CannonBallNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new CannonBallNetworkObject(networker, id, frame);
+						break;
 				}
 
 				if (!availableCallback)

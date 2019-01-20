@@ -20,18 +20,15 @@ public class MainMenuManager : MonoBehaviour
     private TMP_InputField username;
 
     [Space]
-
-    [SerializeField]
-    private GameObject mainmenu;
-    [SerializeField]
-    private GameObject options;
-
-    [Space]
     private Resolution[] resolutions;
     [SerializeField]
     private TMP_Dropdown resDropdown;
     [SerializeField]
     private TextMeshProUGUI fullscreenText;
+
+    [Space]
+
+    [SerializeField] private MultiplayerMenu mm;
 
     private void Start()
     {
@@ -106,10 +103,15 @@ public class MainMenuManager : MonoBehaviour
             return false;
     }
 
-    public void SwitchMenu()
+    public void Connect()
     {
-        mainmenu.SetActive(!mainmenu.activeInHierarchy);
-        options.SetActive(!options.activeInHierarchy);
+        PlayerPrefs.SetString("username",username.text);
+        PlayerPrefs.SetFloat("r", redSlider.value);
+        PlayerPrefs.SetFloat("g", greenSlider.value);
+        PlayerPrefs.SetFloat("b", blueSlider.value);
+        PlayerPrefs.Save();
+
+        mm.Connect();
     }
     
 }

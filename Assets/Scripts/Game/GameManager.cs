@@ -30,4 +30,9 @@ public class GameManager : MonoBehaviour
     {
         networkManager.InstantiatePlayer(0);
     }
+
+    public void Shoot(Vector3 pos, float angle)
+    {
+        networkManager.InstantiateCannonBall(0,pos,Quaternion.Euler(0,0,angle),true);
+    }
 }

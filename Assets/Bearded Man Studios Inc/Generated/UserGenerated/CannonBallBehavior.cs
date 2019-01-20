@@ -4,14 +4,12 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"string\", \"Color\"][\"Vector3\", \"float\"]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"username\", \"usercolour\"][\"position\", \"angle\"]]")]
-	public abstract partial class PlayerBehavior : NetworkBehavior
+	[GeneratedRPC("{\"types\":[]")]
+	[GeneratedRPCVariableNames("{\"types\":[]")]
+	public abstract partial class CannonBallBehavior : NetworkBehavior
 	{
-		public const byte RPC_SET_PREFS = 0 + 5;
-		public const byte RPC_SHOOT = 1 + 5;
 		
-		public PlayerNetworkObject networkObject = null;
+		public CannonBallNetworkObject networkObject = null;
 
 		public override void Initialize(NetworkObject obj)
 		{
@@ -19,12 +17,10 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (networkObject != null && networkObject.AttachedBehavior != null)
 				return;
 			
-			networkObject = (PlayerNetworkObject)obj;
+			networkObject = (CannonBallNetworkObject)obj;
 			networkObject.AttachedBehavior = this;
 
 			base.SetupHelperRpcs(networkObject);
-			networkObject.RegisterRpc("SetPrefs", SetPrefs, typeof(string), typeof(Color));
-			networkObject.RegisterRpc("Shoot", Shoot, typeof(Vector3), typeof(float));
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -82,7 +78,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public override void Initialize(NetWorker networker, byte[] metadata = null)
 		{
-			Initialize(new PlayerNetworkObject(networker, createCode: TempAttachCode, metadata: metadata));
+			Initialize(new CannonBallNetworkObject(networker, createCode: TempAttachCode, metadata: metadata));
 		}
 
 		private void DestroyGameObject(NetWorker sender)
@@ -93,7 +89,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public override NetworkObject CreateNetworkObject(NetWorker networker, int createCode, byte[] metadata = null)
 		{
-			return new PlayerNetworkObject(networker, this, createCode, metadata);
+			return new CannonBallNetworkObject(networker, this, createCode, metadata);
 		}
 
 		protected override void InitializedTransform()
@@ -101,18 +97,6 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			networkObject.SnapInterpolations();
 		}
 
-		/// <summary>
-		/// Arguments:
-		/// string username
-		/// Color usercolour
-		/// </summary>
-		public abstract void SetPrefs(RpcArgs args);
-		/// <summary>
-		/// Arguments:
-		/// Vector3 position
-		/// float angle
-		/// </summary>
-		public abstract void Shoot(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}

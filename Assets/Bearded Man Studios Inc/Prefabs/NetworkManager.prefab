@@ -42,6 +42,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerNetworkObject:
   - {fileID: 1643137526207348, guid: 351bedd6ebc8b0246a4608be698e8612, type: 2}
+  CannonBallNetworkObject:
+  - {fileID: 1959442252968272, guid: 85b0c0d95c0fda744bdd8bb749fd3248, type: 2}
   automaticScenes: 1
 --- !u!1001 &100100000
 Prefab:
