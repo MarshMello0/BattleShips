@@ -10,7 +10,6 @@ public class Player : PlayerBehavior
 {
     [Header("Controls")]
     public List<KeyCode> forwardKeys = new List<KeyCode>();
-    public List<KeyCode> backwardsKeys = new List<KeyCode>();
     public List<KeyCode> leftKeys = new List<KeyCode>();
     public List<KeyCode> rightKeys = new List<KeyCode>();
     [Space]
@@ -111,14 +110,6 @@ public class Player : PlayerBehavior
             if (Input.GetKey(key))
             {
                 transform.position = Vector2.MoveTowards(transform.position, forward.position, step);
-            }
-        }
-
-        foreach (KeyCode key in backwardsKeys)
-        {
-            if (Input.GetKey(key))
-            {
-                transform.position = Vector2.MoveTowards(transform.position, forward.position, -step);
             }
         }
 
