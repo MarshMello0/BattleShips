@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 public class MultiplayerMenu : MonoBehaviour
 {
-	public string ipAddress = null;
-	public string portNumber = null;
+	public string ipAddress = "127.0.0.1";
+	public string portNumber = "15937";
 	public bool DontChangeSceneOnConnect = false;
 	public string masterServerHost = string.Empty;
 	public ushort masterServerPort = 15940;
@@ -36,10 +37,9 @@ public class MultiplayerMenu : MonoBehaviour
 
 	private void Start()
 	{
-		ipAddress = "127.0.0.1";
-		portNumber = "15937";
-
-		for (int i = 0; i < ToggledButtons.Length; ++i)
+        ipAddress = "127.0.0.1";
+        portNumber = "15937";
+        for (int i = 0; i < ToggledButtons.Length; ++i)
 		{
 			Button btn = ToggledButtons[i].GetComponent<Button>();
 			if (btn != null)
@@ -67,9 +67,22 @@ public class MultiplayerMenu : MonoBehaviour
 		Debug.Log("Found endpoint: " + endpoint.Address + ":" + endpoint.Port);
 	}
 
-	public void Connect()
+    public void LanConnect()
+    {
+        ipAddress = "127.0.0.1";
+        Connect();
+    }
+
+    public void NetworkConnect(string ip)
+    {
+        ipAddress = ip;
+        Connect();
+    }
+
+	private void Connect()
 	{
-		if (connectUsingMatchmaking)
+        portNumber = "15937";
+        if (connectUsingMatchmaking)
 		{
 			ConnectToMatchmaking();
 			return;
@@ -134,34 +147,49 @@ public class MultiplayerMenu : MonoBehaviour
 
 	public void Host()
 	{
+        StartCoroutine(HostGame());
+	}
+
+    IEnumerator HostGame()
+    {
+        WWW ipCheck = new WWW("http://checkip.dyndns.org/");
+        yield return ipCheck;
+        string data = ipCheck.text;
+        ipAddress = data.Split(':')[1].Split('<')[0].Remove(0,1); //Banna Split
+        Debug.Log(ipAddress);
+        portNumber = "15937";
+
         PlayerPrefs.SetString("username", "Host");
         PlayerPrefs.SetFloat("r", 255);
         PlayerPrefs.SetFloat("g", 215);
         PlayerPrefs.SetFloat("b", 0);
         PlayerPrefs.Save();
+
+
         if (useTCP)
-		{
-			server = new TCPServer(64);
-			((TCPServer)server).Connect();
-		}
-		else
-		{
-			server = new UDPServer(64);
+        {
+            server = new TCPServer(64);
+            ((TCPServer)server).Connect();
+        }
+        else
+        {
+            server = new UDPServer(64);
 
-			if (natServerHost.Trim().Length == 0)
-				((UDPServer)server).Connect(ipAddress, ushort.Parse(portNumber));
-			else
-				((UDPServer)server).Connect(port: ushort.Parse(portNumber), natHost: natServerHost, natPort: natServerPort);
-		}
+            if (natServerHost.Trim().Length == 0)
+                ((UDPServer)server).Connect(ipAddress, ushort.Parse(portNumber));
+            else
+                ((UDPServer)server).Connect(port: ushort.Parse(portNumber), natHost: natServerHost, natPort: natServerPort);
+        }
 
-		server.playerTimeout += (player, sender) =>
-		{
-			Debug.Log("Player " + player.NetworkId + " timed out");
-		};
-		//LobbyService.Instance.Initialize(server);
+        server.playerTimeout += (player, sender) =>
+        {
+            Debug.Log("Player " + player.NetworkId + " timed out");
+        };
+        //LobbyService.Instance.Initialize(server);
 
-		Connected(server);
-	}
+        Connected(server);
+
+    }
 #if UNITY_EDITOR
     private void Update()
 	{

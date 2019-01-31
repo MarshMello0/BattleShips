@@ -13,10 +13,13 @@ public class ScaleableGridContent : MonoBehaviour
     private GridLayoutGroup grid;
     private RectTransform rectTransform;
 
-    private void Start()
+    [SerializeField] private float delay = 0f;
+
+    IEnumerator Start()
     {
         grid = GetComponent<GridLayoutGroup>();
         rectTransform = GetComponent<RectTransform>();
+        yield return new WaitForSeconds(delay);
         UpdateGrid();
     }
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
+using System.IO;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class MainMenuManager : MonoBehaviour
     [Space]
 
     [SerializeField]
-    private Button joinGame;
+    private Button[] joinGame;
     [SerializeField]
     private TMP_InputField username;
 
@@ -30,6 +32,9 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] private MultiplayerMenu mm;
 
+    [Space]
+    [SerializeField] private TMP_InputField ipAdress;
+
     private void Start()
     {
         resolutions = Screen.resolutions;
@@ -40,6 +45,7 @@ public class MainMenuManager : MonoBehaviour
         }
         resDropdown.AddOptions(options);
         resDropdown.onValueChanged.AddListener(delegate { ChangeResolution(); });
+        CheckCommands();
     }
 
     public void ToggleFullScreen()
@@ -83,13 +89,16 @@ public class MainMenuManager : MonoBehaviour
 
     private void JoinButton()
     {
-        if (ValidToJoin() && !joinGame.interactable)
+        if (ValidToJoin() && !joinGame[0].interactable)
         {
-            joinGame.interactable = true;
+            //I know there is always going to be two join game buttons
+            joinGame[0].interactable = true;
+            joinGame[1].interactable = true;
         }
-        else if (!ValidToJoin() && joinGame.interactable)
+        else if (!ValidToJoin() && joinGame[0].interactable)
         {
-            joinGame.interactable = false;
+            joinGame[0].interactable = false;
+            joinGame[1].interactable = false;
         }
     }
 
@@ -103,7 +112,7 @@ public class MainMenuManager : MonoBehaviour
             return false;
     }
 
-    public void Connect()
+    public void Connect(bool lan)
     {
         PlayerPrefs.SetString("username",username.text);
         PlayerPrefs.SetFloat("r", redSlider.value);
@@ -111,7 +120,28 @@ public class MainMenuManager : MonoBehaviour
         PlayerPrefs.SetFloat("b", blueSlider.value);
         PlayerPrefs.Save();
 
-        mm.Connect();
+        if (lan)
+        {
+            mm.LanConnect();
+        }
+        else
+        {
+            mm.NetworkConnect(ipAdress.text);
+        }
+    }
+
+    private void CheckCommands()
+    {
+        string[] args = Environment.GetCommandLineArgs();
+        foreach (string arg in args)
+        {
+            Debug.Log(arg);
+            if (arg == "host")
+            {
+                Debug.Log("Hosting Server!");
+                mm.Host();
+            }
+        }
     }
     
 }
