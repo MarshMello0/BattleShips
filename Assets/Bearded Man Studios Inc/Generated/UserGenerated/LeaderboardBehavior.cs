@@ -4,15 +4,16 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"string\", \"Color\"][\"Vector3\", \"float\", \"uint\"][\"uint\"]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"username\", \"usercolour\"][\"position\", \"angle\", \"id\"][\"ownerID\"]]")]
-	public abstract partial class PlayerBehavior : NetworkBehavior
+	[GeneratedRPC("{\"types\":[[\"uint\", \"string\"][\"uint\", \"int\"][\"uint\", \"string\", \"int\"][\"uint\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"id\", \"name\"][\"id\", \"newScore\"][\"id\", \"name\", \"score\"][\"id\"]]")]
+	public abstract partial class LeaderboardBehavior : NetworkBehavior
 	{
-		public const byte RPC_SET_PREFS = 0 + 5;
-		public const byte RPC_SHOOT = 1 + 5;
-		public const byte RPC_HIT = 2 + 5;
+		public const byte RPC_ADD_PLAYER = 0 + 5;
+		public const byte RPC_UPDATE_SCORE = 1 + 5;
+		public const byte RPC_ADD_PLAYER_WITH_SCORE = 2 + 5;
+		public const byte RPC_REMOVE_PLAYER = 3 + 5;
 		
-		public PlayerNetworkObject networkObject = null;
+		public LeaderboardNetworkObject networkObject = null;
 
 		public override void Initialize(NetworkObject obj)
 		{
@@ -20,13 +21,14 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (networkObject != null && networkObject.AttachedBehavior != null)
 				return;
 			
-			networkObject = (PlayerNetworkObject)obj;
+			networkObject = (LeaderboardNetworkObject)obj;
 			networkObject.AttachedBehavior = this;
 
 			base.SetupHelperRpcs(networkObject);
-			networkObject.RegisterRpc("SetPrefs", SetPrefs, typeof(string), typeof(Color));
-			networkObject.RegisterRpc("Shoot", Shoot, typeof(Vector3), typeof(float), typeof(uint));
-			networkObject.RegisterRpc("Hit", Hit, typeof(uint));
+			networkObject.RegisterRpc("AddPlayer", AddPlayer, typeof(uint), typeof(string));
+			networkObject.RegisterRpc("UpdateScore", UpdateScore, typeof(uint), typeof(int));
+			networkObject.RegisterRpc("AddPlayerWithScore", AddPlayerWithScore, typeof(uint), typeof(string), typeof(int));
+			networkObject.RegisterRpc("RemovePlayer", RemovePlayer, typeof(uint));
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -84,7 +86,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public override void Initialize(NetWorker networker, byte[] metadata = null)
 		{
-			Initialize(new PlayerNetworkObject(networker, createCode: TempAttachCode, metadata: metadata));
+			Initialize(new LeaderboardNetworkObject(networker, createCode: TempAttachCode, metadata: metadata));
 		}
 
 		private void DestroyGameObject(NetWorker sender)
@@ -95,7 +97,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public override NetworkObject CreateNetworkObject(NetWorker networker, int createCode, byte[] metadata = null)
 		{
-			return new PlayerNetworkObject(networker, this, createCode, metadata);
+			return new LeaderboardNetworkObject(networker, this, createCode, metadata);
 		}
 
 		protected override void InitializedTransform()
@@ -105,22 +107,28 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		/// <summary>
 		/// Arguments:
-		/// string username
-		/// Color usercolour
+		/// uint id
+		/// string name
 		/// </summary>
-		public abstract void SetPrefs(RpcArgs args);
+		public abstract void AddPlayer(RpcArgs args);
 		/// <summary>
 		/// Arguments:
-		/// Vector3 position
-		/// float angle
+		/// uint id
+		/// int newScore
+		/// </summary>
+		public abstract void UpdateScore(RpcArgs args);
+		/// <summary>
+		/// Arguments:
+		/// uint id
+		/// string name
+		/// int score
+		/// </summary>
+		public abstract void AddPlayerWithScore(RpcArgs args);
+		/// <summary>
+		/// Arguments:
 		/// uint id
 		/// </summary>
-		public abstract void Shoot(RpcArgs args);
-		/// <summary>
-		/// Arguments:
-		/// uint ownerID
-		/// </summary>
-		public abstract void Hit(RpcArgs args);
+		public abstract void RemovePlayer(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}

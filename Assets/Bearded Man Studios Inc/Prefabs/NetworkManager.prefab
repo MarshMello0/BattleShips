@@ -40,10 +40,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe5b082a785e7641bf1a62b930a3f5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerNetworkObject:
-  - {fileID: 1643137526207348, guid: 351bedd6ebc8b0246a4608be698e8612, type: 2}
   CannonBallNetworkObject:
   - {fileID: 1959442252968272, guid: 85b0c0d95c0fda744bdd8bb749fd3248, type: 2}
+  ChatNetworkObject:
+  - {fileID: 1162942442310044, guid: f1227bd01f6151b47a890cd238d23ca2, type: 2}
+  PlayerNetworkObject:
+  - {fileID: 1643137526207348, guid: 351bedd6ebc8b0246a4608be698e8612, type: 2}
+  LeaderboardNetworkObject:
+  - {fileID: 1351786885109480, guid: 804fc46173ba81348acd37d0da549387, type: 2}
   automaticScenes: 1
 --- !u!1001 &100100000
 Prefab:

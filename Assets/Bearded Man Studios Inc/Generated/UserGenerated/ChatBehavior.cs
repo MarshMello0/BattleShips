@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace BeardedManStudios.Forge.Networking.Generated
 {
-	[GeneratedRPC("{\"types\":[[\"string\", \"Color\"][\"Vector3\", \"float\", \"uint\"][\"uint\"]]")]
-	[GeneratedRPCVariableNames("{\"types\":[[\"username\", \"usercolour\"][\"position\", \"angle\", \"id\"][\"ownerID\"]]")]
-	public abstract partial class PlayerBehavior : NetworkBehavior
+	[GeneratedRPC("{\"types\":[[\"string\", \"Color\", \"string\"][\"string\", \"Color\"][\"string\", \"Color\"]]")]
+	[GeneratedRPCVariableNames("{\"types\":[[\"username\", \"usercolour\", \"message\"][\"username\", \"usercolour\"][\"username\", \"usercolour\"]]")]
+	public abstract partial class ChatBehavior : NetworkBehavior
 	{
-		public const byte RPC_SET_PREFS = 0 + 5;
-		public const byte RPC_SHOOT = 1 + 5;
-		public const byte RPC_HIT = 2 + 5;
+		public const byte RPC_RECIVE_MESSAGE = 0 + 5;
+		public const byte RPC_PLAYER_JOINED = 1 + 5;
+		public const byte RPC_PLAYER_LEFT = 2 + 5;
 		
-		public PlayerNetworkObject networkObject = null;
+		public ChatNetworkObject networkObject = null;
 
 		public override void Initialize(NetworkObject obj)
 		{
@@ -20,13 +20,13 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			if (networkObject != null && networkObject.AttachedBehavior != null)
 				return;
 			
-			networkObject = (PlayerNetworkObject)obj;
+			networkObject = (ChatNetworkObject)obj;
 			networkObject.AttachedBehavior = this;
 
 			base.SetupHelperRpcs(networkObject);
-			networkObject.RegisterRpc("SetPrefs", SetPrefs, typeof(string), typeof(Color));
-			networkObject.RegisterRpc("Shoot", Shoot, typeof(Vector3), typeof(float), typeof(uint));
-			networkObject.RegisterRpc("Hit", Hit, typeof(uint));
+			networkObject.RegisterRpc("ReciveMessage", ReciveMessage, typeof(string), typeof(Color), typeof(string));
+			networkObject.RegisterRpc("PlayerJoined", PlayerJoined, typeof(string), typeof(Color));
+			networkObject.RegisterRpc("PlayerLeft", PlayerLeft, typeof(string), typeof(Color));
 
 			networkObject.onDestroy += DestroyGameObject;
 
@@ -84,7 +84,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public override void Initialize(NetWorker networker, byte[] metadata = null)
 		{
-			Initialize(new PlayerNetworkObject(networker, createCode: TempAttachCode, metadata: metadata));
+			Initialize(new ChatNetworkObject(networker, createCode: TempAttachCode, metadata: metadata));
 		}
 
 		private void DestroyGameObject(NetWorker sender)
@@ -95,7 +95,7 @@ namespace BeardedManStudios.Forge.Networking.Generated
 
 		public override NetworkObject CreateNetworkObject(NetWorker networker, int createCode, byte[] metadata = null)
 		{
-			return new PlayerNetworkObject(networker, this, createCode, metadata);
+			return new ChatNetworkObject(networker, this, createCode, metadata);
 		}
 
 		protected override void InitializedTransform()
@@ -107,20 +107,21 @@ namespace BeardedManStudios.Forge.Networking.Generated
 		/// Arguments:
 		/// string username
 		/// Color usercolour
+		/// string message
 		/// </summary>
-		public abstract void SetPrefs(RpcArgs args);
+		public abstract void ReciveMessage(RpcArgs args);
 		/// <summary>
 		/// Arguments:
-		/// Vector3 position
-		/// float angle
-		/// uint id
+		/// string username
+		/// Color usercolour
 		/// </summary>
-		public abstract void Shoot(RpcArgs args);
+		public abstract void PlayerJoined(RpcArgs args);
 		/// <summary>
 		/// Arguments:
-		/// uint ownerID
+		/// string username
+		/// Color usercolour
 		/// </summary>
-		public abstract void Hit(RpcArgs args);
+		public abstract void PlayerLeft(RpcArgs args);
 
 		// DO NOT TOUCH, THIS GETS GENERATED PLEASE EXTEND THIS CLASS IF YOU WISH TO HAVE CUSTOM CODE ADDITIONS
 	}

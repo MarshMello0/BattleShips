@@ -134,7 +134,12 @@ public class MultiplayerMenu : MonoBehaviour
 
 	public void Host()
 	{
-		if (useTCP)
+        PlayerPrefs.SetString("username", "Host");
+        PlayerPrefs.SetFloat("r", 255);
+        PlayerPrefs.SetFloat("g", 215);
+        PlayerPrefs.SetFloat("b", 0);
+        PlayerPrefs.Save();
+        if (useTCP)
 		{
 			server = new TCPServer(64);
 			((TCPServer)server).Connect();
@@ -157,22 +162,25 @@ public class MultiplayerMenu : MonoBehaviour
 
 		Connected(server);
 	}
-
-	private void Update()
+#if UNITY_EDITOR
+    private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.H))
+        
+        if (Input.GetKeyDown(KeyCode.H))
 			Host();
 		else if (Input.GetKeyDown(KeyCode.C))
 			Connect();
-		else if (Input.GetKeyDown(KeyCode.L))
+        else if (Input.GetKeyDown(KeyCode.L))
 		{
 			NetWorker.localServerLocated -= TestLocalServerFind;
 			NetWorker.localServerLocated += TestLocalServerFind;
 			NetWorker.RefreshLocalUdpListings();
 		}
-	}
+        
+    }
+#endif
 
-	private void TestLocalServerFind(NetWorker.BroadcastEndpoints endpoint, NetWorker sender)
+    private void TestLocalServerFind(NetWorker.BroadcastEndpoints endpoint, NetWorker sender)
 	{
 		Debug.Log("Address: " + endpoint.Address + ", Port: " + endpoint.Port + ", Server? " + endpoint.IsServer);
 	}

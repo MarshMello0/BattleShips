@@ -23,13 +23,21 @@ namespace BeardedManStudios.Forge.Networking.Generated
 			{
 				switch (identity)
 				{
-					case PlayerNetworkObject.IDENTITY:
-						availableCallback = true;
-						obj = new PlayerNetworkObject(networker, id, frame);
-						break;
 					case CannonBallNetworkObject.IDENTITY:
 						availableCallback = true;
 						obj = new CannonBallNetworkObject(networker, id, frame);
+						break;
+					case ChatNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new ChatNetworkObject(networker, id, frame);
+						break;
+					case LeaderboardNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new LeaderboardNetworkObject(networker, id, frame);
+						break;
+					case PlayerNetworkObject.IDENTITY:
+						availableCallback = true;
+						obj = new PlayerNetworkObject(networker, id, frame);
 						break;
 				}
 

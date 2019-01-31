@@ -32,7 +32,17 @@ public class Player : PlayerBehavior
     [SerializeField] private TextMeshPro name;
     [SerializeField] private SpriteRenderer sails;
 
+    private ChatManager chat;
+    private GameManager gm;
+
     private Camera cam;
+
+    private void Start()
+    {
+        //Doesnt need to wait for network to get setup as its already in the scene, will fix error in Update
+        gm = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        gm.localPlayer = this;
+    }
 
     protected override void NetworkStart()
     {
@@ -45,6 +55,9 @@ public class Player : PlayerBehavior
             string username = PlayerPrefs.GetString("username");
             Color sailColour = new Color(PlayerPrefs.GetFloat("r"), PlayerPrefs.GetFloat("g"), PlayerPrefs.GetFloat("b"));
             networkObject.SendRpc(RPC_SET_PREFS, Receivers.AllBuffered, username, sailColour);
+            chat = GameObject.FindWithTag("ChatManager").GetComponent<ChatManager>();
+            networkObject.health = 4;
+            GameObject.FindWithTag("Leaderboard").GetComponent<LeaderboardManager>().SendInfo(networkObject.Owner.NetworkId, username);
         }
         else
         {
@@ -58,10 +71,13 @@ public class Player : PlayerBehavior
         if (networkObject == null)
             return;
         if (networkObject.IsOwner)
-        {
-            PlayerMovement();
-            CannonMovement();
-            CannonShooting();
+        {               
+            if (chat.inputHidden && chat != null && !gm.isPaused)
+            {
+                PlayerMovement();
+                CannonMovement();
+                CannonShooting();
+            }
             UpdateNetwork();
             CameraFollow();
         }
@@ -180,13 +196,13 @@ public class Player : PlayerBehavior
     {
         if (Input.GetMouseButtonDown(0))
         {
-            networkObject.SendRpc(RPC_SHOOT, Receivers.Server, cannonFLSpawn.position, cannonFL.eulerAngles.z);
-            networkObject.SendRpc(RPC_SHOOT, Receivers.Server, cannonBLSpawn.position, cannonBL.eulerAngles.z);
+            networkObject.SendRpc(RPC_SHOOT, Receivers.Server, cannonFLSpawn.position, cannonFL.eulerAngles.z, networkObject.Owner.NetworkId);
+            networkObject.SendRpc(RPC_SHOOT, Receivers.Server, cannonBLSpawn.position, cannonBL.eulerAngles.z, networkObject.Owner.NetworkId);
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            networkObject.SendRpc(RPC_SHOOT, Receivers.Server, cannonFRSpawn.position, cannonFR.eulerAngles.z);
-            networkObject.SendRpc(RPC_SHOOT, Receivers.Server, cannonBRSpawn.position, cannonBR.eulerAngles.z);
+            networkObject.SendRpc(RPC_SHOOT, Receivers.Server, cannonFRSpawn.position, cannonFR.eulerAngles.z, networkObject.Owner.NetworkId);
+            networkObject.SendRpc(RPC_SHOOT, Receivers.Server, cannonBRSpawn.position, cannonBR.eulerAngles.z, networkObject.Owner.NetworkId);
         }
     }
     private float PosToAngle(Vector3 pos1, Vector3 pos2)
@@ -237,7 +253,29 @@ public class Player : PlayerBehavior
         {
             Vector3 pos = args.GetNext<Vector3>();
             float dir = args.GetNext<float>();
-            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().Shoot(pos, dir);
+            uint id = args.GetNext<uint>();
+            GameObject.FindWithTag("GameManager").GetComponent<GameManager>().Shoot(pos, dir,id);
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        networkObject.Destroy();
+    }
+
+    public override void Hit(RpcArgs args)
+    {
+        uint ownerID = args.GetNext<uint>();
+        networkObject.health--;
+        if (networkObject.health <= 0)
+        {
+            GameObject.FindWithTag("Leaderboard").GetComponent<LeaderboardManager>().UpdateScore(ownerID);
+            networkObject.Destroy();
+        }
+    }
+
+    public void PlayerHit(uint ownerId)
+    {
+        networkObject.SendRpc(RPC_HIT, Receivers.Owner, ownerId);
     }
 }

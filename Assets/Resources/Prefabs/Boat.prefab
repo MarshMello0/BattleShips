@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 114717726725974518}
   m_Layer: 0
   m_Name: Boat
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -682,7 +682,6 @@ MonoBehaviour:
   forward: {fileID: 4741689296880036}
   name: {fileID: 114517450257738578}
   sails: {fileID: 212322907236944520}
-  gm: {fileID: 0}
 --- !u!212 &212044920188016366
 SpriteRenderer:
   m_ObjectHideFlags: 1
